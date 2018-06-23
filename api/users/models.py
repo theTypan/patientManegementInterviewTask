@@ -33,8 +33,8 @@ class UserManager(BaseUserManager):
 		user = self.model(
 			email = self.normalize_email(email)
 		)
-
 		user.set_password(password)
+		user.first_name = first_name
 		user.save(using=self._db)
 		return user
 
@@ -98,7 +98,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 	date_joined = models.DateTimeField(default=timezone.now)
 
 	def __str__(self):
-		return "{}".format(self.full_name)
+		return "{}".format(self.get_full_name)
 
 	@property
 	def get_full_name(self):
@@ -107,10 +107,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 		first name plus last name and other names if last name and other names
 		available seprated by spaces
 		"""
+		full_name = '%s %s %s' % (self.first_name, (self.last_name or ''), (self.other_names or ''))
 
-		return " ".join([
-				self.first_name, self.last_name or "", self.other_names or ""
-			])
+		return ' '.join(full_name.split())
 
 	@property
 	def get_short_name(self):
