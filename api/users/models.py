@@ -64,7 +64,6 @@ class UserManager(BaseUserManager):
 		and password.
 		"""
 		user = self.create_user(email, first_name, password)
-		user.patient = True
 		user.staff = True
 		user.superuser = True
 		user.save(using=self._db)
@@ -98,10 +97,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 	date_joined = models.DateTimeField(default=timezone.now)
 
 	def __str__(self):
-		return "{}".format(self.get_full_name)
+		return "{}".format(self.full_name)
 
 	@property
-	def get_full_name(self):
+	def full_name(self):
 		"""
 		Returns a user's first name plus the last name if last name available or 
 		first name plus last name and other names if last name and other names
@@ -112,7 +111,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 		return ' '.join(full_name.split())
 
 	@property
-	def get_short_name(self):
+	def short_name(self):
 		"""
 		Returns the first name of a user
 		"""
@@ -152,3 +151,26 @@ class User(AbstractBaseUser, PermissionsMixin):
 		Returns True if a user account is deleted, False otherwise
 		"""
 		return self.deleted
+
+	def delete(self, *args, **kwargs):
+		"""
+		Mark the User field deleted true
+		"""
+		self.deleted = True
+		self.active = False
+		self.save()
+
+	def enroll(self, *args, **kwargs):
+		"""
+		Mark the User field patient true
+		"""
+		self.patient = True
+		self.save()
+
+	def unenroll(self, *args, **kwargs):
+		"""
+		Mark the User field patient false
+		"""
+		self.patient = False
+		self.save()
+
