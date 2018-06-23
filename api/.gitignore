@@ -1,0 +1,26 @@
+*.pyc
+*.sqlite3
+*.log
+*.pid
+.idea/
+pcl_data/pcl_data
+media/*
+logs/*
+celerybeat-schedule
+config/local.py
+config/celery_settings.py
+.requirements.txt.swp
+
+# Virtual environments
+wf/*
+env/*
+
+.DS_Store
+logfile
+coverage-report/
+build/
+/static
+.coverage
+.cache/
+.idea/vcs.xml
+templates/
