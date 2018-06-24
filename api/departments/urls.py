@@ -15,12 +15,12 @@ urlpatterns = [
     ),
      url(
         r'^patients$', 
-        views.DepartmentPatientListCreateAPIView.as_view(), 
-        name="department_patient_list_create"
+        views.PatientListCreateAPIView.as_view(), 
+        name="patient_list_create"
     ),
     url(
         r'^patients/(?P<pk>[^/]+)/$', 
-        views.DepartmentPatientRetrieveUpdateDestroyView.as_view(), 
-        name="department_patient_retrieve_update_destroy"
+        views.PatientRetrieveUpdateDestroyView.as_view(), 
+        name="patient_retrieve_update_destroy"
     ),
 ]

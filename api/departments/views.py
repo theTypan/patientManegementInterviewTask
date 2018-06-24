@@ -6,11 +6,11 @@ from rest_framework import permissions
 
 from departments.models import (
 	Department, 
-	DepartmentPatient
+	Patient
 )
 from departments.serializers import (
 	DepartmentSerializer, 
-	DepartmentPatientSerializer
+	PatientSerializer
 )
 
 class DepartmentListCreateAPIView(generics.ListCreateAPIView):
@@ -23,12 +23,12 @@ class DepartmentRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView)
     queryset = Department.objects.all()
     permission_class = (permissions.IsAuthenticatedOrReadOnly, )
 
-class DepartmentPatientListCreateAPIView(generics.ListCreateAPIView):
-    serializer_class = DepartmentPatientSerializer
-    queryset = DepartmentPatient.objects.all()
+class PatientListCreateAPIView(generics.ListCreateAPIView):
+    serializer_class = PatientSerializer
+    queryset = Patient.objects.all()
 
 
-class DepartmentPatientRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = DepartmentPatientSerializer
-    queryset = DepartmentPatient.objects.all()
+class PatientRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = PatientSerializer
+    queryset = Patient.objects.all()
     permission_class = (permissions.IsAuthenticatedOrReadOnly, )

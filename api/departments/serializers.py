@@ -1,11 +1,11 @@
 from rest_framework import serializers
 
-from departments.models import Department, DepartmentPatient
+from departments.models import Department, Patient
 from users.serializers import UserSerializer
 
-class DepartmentPatientSerializer(serializers.ModelSerializer):
+class PatientSerializer(serializers.ModelSerializer):
 	class Meta:
-		model = DepartmentPatient
+		model = Patient
 		fields = (
 			'enrollment_number',
 			'department',
@@ -15,7 +15,7 @@ class DepartmentPatientSerializer(serializers.ModelSerializer):
 		)
 
 class DepartmentSerializer(serializers.ModelSerializer):
-	patients = DepartmentPatientSerializer(many=True, read_only=True)
+	patients = PatientSerializer(many=True, read_only=True)
 
 	class Meta:
 		model = Department
