@@ -16,4 +16,3 @@ class UserRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = UserSerializer
     queryset = User.objects.all()
     permission_class = (permissions.IsAuthenticatedOrReadOnly, )
-

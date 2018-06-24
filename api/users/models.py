@@ -10,6 +10,8 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 from locations.models import County, Subcounty, Ward, Village
 
+from common.models import AbstractBase
+
 GENDER_CHOICES = (
 	('M', 'Male'),
 	('F', 'Female'),
@@ -86,15 +88,16 @@ class User(AbstractBaseUser, PermissionsMixin):
 	first_name = models.CharField(max_length=255)
 	last_name = models.CharField(max_length=255, null=True, blank=True)
 	other_names = models.CharField(max_length=255, null=True, blank=True)
-	primary_phone_number = PhoneNumberField(unique=True, blank=True, null=True)
-	alternative_phone_number = PhoneNumberField(unique=True, blank=True, null=True)
+	primary_phone_number = PhoneNumberField(unique=True)
+	alternative_phone_number = PhoneNumberField(blank=True, null=True)
 	email = models.EmailField(unique=True)
 	gender = models.CharField(max_length=1, choices=GENDER_CHOICES, blank=True, null=True)
 	date_of_birth = models.DateField(null=True, blank=True)
-	county = models.ForeignKey(County, on_delete=models.CASCADE, null=True)
-	subcounty = models.ForeignKey(Subcounty, on_delete=models.CASCADE, null=True)
-	ward = models.ForeignKey(Ward, on_delete=models.CASCADE, null=True)
-	village = models.ForeignKey(Village, on_delete=models.CASCADE, null=True)
+	county = models.ForeignKey(County, on_delete=models.CASCADE, null=True, blank=True)
+	subcounty = models.ForeignKey(Subcounty, on_delete=models.CASCADE, null=True, blank=True)
+	ward = models.ForeignKey(Ward, on_delete=models.CASCADE, null=True, blank=True)
+	village = models.ForeignKey(Village, on_delete=models.CASCADE, null=True, blank=True)
+	next_of_kin = models.ManyToManyField('User')
 	patient = models.BooleanField(default=False)
 	staff = models.BooleanField(default=False)
 	superuser = models.BooleanField(default=False)
@@ -165,4 +168,3 @@ class User(AbstractBaseUser, PermissionsMixin):
 		self.deleted = True
 		self.active = False
 		self.save()
-
