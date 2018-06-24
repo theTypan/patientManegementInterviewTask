@@ -108,7 +108,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 	def __str__(self):
 		return "{}".format(self.full_name)
 
-	@property
 	def full_name(self):
 		"""
 		Returns a user's first name plus the last name if last name available or 
@@ -119,47 +118,56 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 		return ' '.join(full_name.split())
 
-	@property
 	def short_name(self):
 		"""
 		Returns the first name of a user
 		"""
 		return self.first_name
 
-	@property
 	def is_patient(self):
 		"""
 		Return True if a user is a patient, False otherwise
 		"""
 		return self.patient
+	is_patient.boolean = True
+	is_patient.admin_order_field = 'patient'
+	is_patient.short_description = 'Patient ?'
 
-	@property
 	def is_staff(self):
 		"""
 		Return True if a user is an an staff, False otherwise
 		"""
 		return self.staff
+	is_staff.boolean = True
+	is_staff.admin_order_field = 'staff'
+	is_staff.short_description = 'Staff?'
 
-	@property
 	def is_superuser(self):
 		"""
 		Return True if a user is a superuser, False otherwise
 		"""
 		return self.superuser
+	is_superuser.boolean = True
+	is_superuser.admin_order_field = 'superuser'
+	is_superuser.short_description = 'Superuser?'
 
-	@property
 	def is_active(self):
 		"""
 		Return True if a user account is active, False otherwise
 		"""
 		return self.active
+	is_active.boolean = True
+	is_active.admin_order_field = 'active'	
+	is_active.short_description = 'Active?'
 
-	@property
 	def is_deleted(self):
 		"""
 		Returns True if a user account is deleted, False otherwise
 		"""
 		return self.deleted
+	is_deleted.boolean = True
+	is_deleted.admin_order_field = 'deleted'
+	is_deleted.short_description = 'Delete?'
 
 	def delete(self, *args, **kwargs):
 		"""
