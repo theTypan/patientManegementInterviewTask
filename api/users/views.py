@@ -1,15 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.shortcuts import render
-
-# Create your views here.
 from rest_framework import generics
 from rest_framework import permissions
 
 from users.models import User
 from users.serializers import UserSerializer
-
 
 class UserListCreateAPIView(generics.ListCreateAPIView):
     serializer_class = UserSerializer

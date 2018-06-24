@@ -8,6 +8,8 @@ import uuid
 
 from phonenumber_field.modelfields import PhoneNumberField
 
+from locations.models import County, Subcounty, Ward, Village
+
 GENDER_CHOICES = (
 	('M', 'Male'),
 	('F', 'Female'),
@@ -86,9 +88,13 @@ class User(AbstractBaseUser, PermissionsMixin):
 	other_names = models.CharField(max_length=255, null=True, blank=True)
 	primary_phone_number = PhoneNumberField(unique=True, blank=True, null=True)
 	alternative_phone_number = PhoneNumberField(unique=True, blank=True, null=True)
-	email = models.EmailField(unique=True, blank=True, null=True)
+	email = models.EmailField(unique=True)
 	gender = models.CharField(max_length=1, choices=GENDER_CHOICES, blank=True, null=True)
 	date_of_birth = models.DateField(null=True, blank=True)
+	county = models.ForeignKey(County, on_delete=models.CASCADE, null=True)
+	subcounty = models.ForeignKey(Subcounty, on_delete=models.CASCADE, null=True)
+	ward = models.ForeignKey(Ward, on_delete=models.CASCADE, null=True)
+	village = models.ForeignKey(Village, on_delete=models.CASCADE, null=True)
 	patient = models.BooleanField(default=False)
 	staff = models.BooleanField(default=False)
 	superuser = models.BooleanField(default=False)
