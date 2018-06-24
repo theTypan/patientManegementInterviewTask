@@ -4,8 +4,6 @@ from departments.models import Department, DepartmentPatient
 from users.serializers import UserSerializer
 
 class DepartmentPatientSerializer(serializers.ModelSerializer):
-	patient = UserSerializer()
-
 	class Meta:
 		model = DepartmentPatient
 		fields = (
@@ -13,6 +11,7 @@ class DepartmentPatientSerializer(serializers.ModelSerializer):
 			'department',
 			'patient',
 			'enrollment_date',
+			'discharged'
 		)
 
 class DepartmentSerializer(serializers.ModelSerializer):

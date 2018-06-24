@@ -166,17 +166,3 @@ class User(AbstractBaseUser, PermissionsMixin):
 		self.active = False
 		self.save()
 
-	def enroll(self, *args, **kwargs):
-		"""
-		Mark the User field patient true
-		"""
-		self.patient = True
-		self.save()
-
-	def unenroll(self, *args, **kwargs):
-		"""
-		Mark the User field patient false
-		"""
-		self.patient = False
-		self.save()
-

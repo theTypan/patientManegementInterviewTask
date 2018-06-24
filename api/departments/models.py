@@ -18,7 +18,7 @@ class DepartmentPatient(AbstractBase):
 	department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='patients')
 	patient = models.ForeignKey(User, on_delete=models.CASCADE)
 	enrollment_date = models.DateTimeField()
-
+	discharged = models.BooleanField(default=False)
 
 	def __str__(self):
 		return self.patient.full_name
@@ -26,6 +26,14 @@ class DepartmentPatient(AbstractBase):
 	@property
 	def enrollment_number(self):
 		return self.id
+
+	def save(self, *args, **kwargs):
+		if self.discharged:
+			self.patient.patient = False
+		else:
+			self.patient.patient = True
+		self.patient.save()
+		super().save(*args, **kwargs)
 	
 
 	class Meta:
