@@ -19,11 +19,11 @@ class UserSerializer(serializers.ModelSerializer):
 			'subcounty',
 			'ward',
 			'village',
-			'patient',
-			'staff',
-			'superuser',
-			'active',
-			'deleted',
+			'is_patient',
+			'is_staff',
+			'is_superuser',
+			'is_active',
+			'is_deleted',
 			'date_joined',
 			'next_of_kin'
 		)

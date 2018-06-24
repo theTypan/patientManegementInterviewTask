@@ -48,7 +48,7 @@ class UserManager(BaseUserManager):
 		and password.
 		"""
 		user = self.create_user(email, first_name, password)
-		user.patient = True
+		user.is_patient = True
 		user.save(using=self._db)
 		return user
 
@@ -58,7 +58,7 @@ class UserManager(BaseUserManager):
 		and password.
 		"""
 		user = self.create_user(email, first_name, password)
-		user.staff = True
+		user.is_staff = True
 		user.save(using=self._db)
 		return user
 
@@ -68,8 +68,8 @@ class UserManager(BaseUserManager):
 		and password.
 		"""
 		user = self.create_user(email, first_name, password)
-		user.staff = True
-		user.superuser = True
+		user.is_staff = True
+		user.is_superuser = True
 		user.save(using=self._db)
 		return user
 
@@ -98,15 +98,15 @@ class User(AbstractBaseUser, PermissionsMixin):
 	ward = models.ForeignKey(Ward, on_delete=models.CASCADE, null=True, blank=True)
 	village = models.ForeignKey(Village, on_delete=models.CASCADE, null=True, blank=True)
 	next_of_kin = models.ManyToManyField('User')
-	patient = models.BooleanField(default=False)
-	staff = models.BooleanField(default=False)
-	superuser = models.BooleanField(default=False)
-	active = models.BooleanField(default=True)
-	deleted = models.BooleanField(default=False)
+	is_patient = models.BooleanField(default=False)
+	is_staff = models.BooleanField(default=False)
+	is_superuser = models.BooleanField(default=False)
+	is_active = models.BooleanField(default=True)
+	is_deleted = models.BooleanField(default=False)
 	date_joined = models.DateTimeField(default=timezone.now)
 
 	def __str__(self):
-		return "{}".format(self.full_name)
+		return self.email
 
 	def full_name(self):
 		"""
@@ -124,55 +124,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 		"""
 		return self.first_name
 
-	def is_patient(self):
-		"""
-		Return True if a user is a patient, False otherwise
-		"""
-		return self.patient
-	is_patient.boolean = True
-	is_patient.admin_order_field = 'patient'
-	is_patient.short_description = 'Patient ?'
-
-	def is_staff(self):
-		"""
-		Return True if a user is an an staff, False otherwise
-		"""
-		return self.staff
-	is_staff.boolean = True
-	is_staff.admin_order_field = 'staff'
-	is_staff.short_description = 'Staff?'
-
-	def is_superuser(self):
-		"""
-		Return True if a user is a superuser, False otherwise
-		"""
-		return self.superuser
-	is_superuser.boolean = True
-	is_superuser.admin_order_field = 'superuser'
-	is_superuser.short_description = 'Superuser?'
-
-	def is_active(self):
-		"""
-		Return True if a user account is active, False otherwise
-		"""
-		return self.active
-	is_active.boolean = True
-	is_active.admin_order_field = 'active'	
-	is_active.short_description = 'Active?'
-
-	def is_deleted(self):
-		"""
-		Returns True if a user account is deleted, False otherwise
-		"""
-		return self.deleted
-	is_deleted.boolean = True
-	is_deleted.admin_order_field = 'deleted'
-	is_deleted.short_description = 'Delete?'
-
 	def delete(self, *args, **kwargs):
 		"""
 		Mark the User field deleted true
 		"""
-		self.deleted = True
-		self.active = False
+		self.is_deleted = True
+		self.is_active = False
 		self.save()

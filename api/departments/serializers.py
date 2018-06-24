@@ -8,10 +8,10 @@ class PatientSerializer(serializers.ModelSerializer):
 		model = Patient
 		fields = (
 			'enrollment_number',
+			'user',
 			'department',
-			'patient',
 			'enrollment_date',
-			'discharged'
+			'discharged',
 		)
 
 class DepartmentSerializer(serializers.ModelSerializer):
@@ -22,6 +22,6 @@ class DepartmentSerializer(serializers.ModelSerializer):
 		fields = (
 			'id',
 			'name',
-			'patients'
+			'patients',
 		)
 
