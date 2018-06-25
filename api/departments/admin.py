@@ -2,7 +2,6 @@ from django.contrib import admin
 
 from .models import Department, Patient
 
-admin.site.register(Department)
 
 class PatientAdmin(admin.ModelAdmin):
 	list_display = ('user', 'department', 'enrollment_number', 
@@ -12,3 +11,13 @@ class PatientAdmin(admin.ModelAdmin):
 	search_fields = ['user',]
 
 admin.site.register(Patient, PatientAdmin)
+
+class DepartmentAdmin(admin.ModelAdmin):
+	list_display = ('name','is_deleted',)
+
+	def get_queryset(self, request):
+		qs = Department.all_objects
+		if request.user.is_superuser:
+			return qs
+
+admin.site.register(Department, DepartmentAdmin)
