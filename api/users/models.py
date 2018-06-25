@@ -10,8 +10,6 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 from locations.models import County, Subcounty, Ward, Village
 
-from common.models import AbstractBase
-
 GENDER_CHOICES = (
 	('M', 'Male'),
 	('F', 'Female'),
@@ -97,7 +95,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 	subcounty = models.ForeignKey(Subcounty, on_delete=models.CASCADE, null=True, blank=True)
 	ward = models.ForeignKey(Ward, on_delete=models.CASCADE, null=True, blank=True)
 	village = models.ForeignKey(Village, on_delete=models.CASCADE, null=True, blank=True)
-	next_of_kin = models.ManyToManyField('User')
+	next_of_kin = models.ManyToManyField('User', blank=True)
 	is_patient = models.BooleanField(default=False)
 	is_staff = models.BooleanField(default=False)
 	is_superuser = models.BooleanField(default=False)
