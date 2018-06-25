@@ -10,6 +10,8 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 from locations.models import County, Subcounty, Ward, Village
 
+from common.models import SoftDeletionModel
+
 GENDER_CHOICES = (
 	('M', 'Male'),
 	('F', 'Female'),
@@ -72,7 +74,7 @@ class UserManager(BaseUserManager):
 		return user
 
 
-class User(AbstractBaseUser, PermissionsMixin):
+class User(AbstractBaseUser, PermissionsMixin, SoftDeletionModel):
 	""" 
 	Custom user class. 
 	"""
@@ -99,8 +101,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 	is_patient = models.BooleanField(default=False)
 	is_staff = models.BooleanField(default=False)
 	is_superuser = models.BooleanField(default=False)
-	is_active = models.BooleanField(default=True)
-	is_deleted = models.BooleanField(default=False)
 	date_joined = models.DateTimeField(default=timezone.now)
 
 	def __str__(self):
@@ -121,11 +121,3 @@ class User(AbstractBaseUser, PermissionsMixin):
 		Returns the first name of a user
 		"""
 		return self.first_name
-
-	def delete(self, *args, **kwargs):
-		"""
-		Mark the User field deleted true
-		"""
-		self.is_deleted = True
-		self.is_active = False
-		self.save()

@@ -6,7 +6,8 @@ import uuid
 
 class SoftDeletionQuerySet(QuerySet):
 	def delete(self):
-		return super(SoftDeletionQuerySet, self).update(deleted_at=timezone.now(), is_deleted=True)
+		return super(SoftDeletionQuerySet, self).update(deleted_at=timezone.now(), 
+			is_deleted=True, is_active=False)
 
 	def hard_delete(self):
 		return super(SoftDeletionQuerySet, self).delete()
@@ -35,6 +36,7 @@ class SoftDeletionManager(models.Manager):
 class SoftDeletionModel(models.Model):
 	deleted_at = models.DateTimeField(blank=True, null=True)
 	is_deleted = models.BooleanField(default=False)
+	is_active = models.BooleanField(default=True)
 
 	objects = SoftDeletionManager()
 	all_objects = SoftDeletionManager(alive_only=False)
@@ -45,6 +47,7 @@ class SoftDeletionModel(models.Model):
 	def delete(self):
 		self.deleted_at = timezone.now()
 		self.is_deleted = True
+		self.is_active = False
 		self.save()
 
 	def hard_delete(self):
