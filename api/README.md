@@ -12,7 +12,7 @@
 * ` $ source env/bin/activate`
 
 
-* cd to project folder
+* cd to project folder/api
 * ` $ pip install -r requirements.txt`
 
 ## Postgres
