@@ -23,7 +23,7 @@ from rest_framework_jwt.views import verify_jwt_token
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-  	url(r'^users/', include('users.urls')),
+  	url(r'^', include('users.urls')),
     url(r'^locations/', include('locations.urls')),
     url(r'^departments/', include('departments.urls')),
 ]

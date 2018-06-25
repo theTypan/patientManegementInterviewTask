@@ -36,11 +36,11 @@ urlpatterns = [
     url(
         r'^villages/$', 
         views.VillageListCreateAPIView.as_view(), 
-        name="ward_list_create"
+        name="village_list_create"
     ),
     url(
         r'^villages/(?P<pk>[^/]+)/$', 
         views.VillageRetrieveUpdateDestroyView.as_view(), 
-        name="ward_retrieve_update_destroy"
+        name="village_retrieve_update_destroy"
     ),
 ]
