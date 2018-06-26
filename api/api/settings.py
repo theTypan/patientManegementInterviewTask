@@ -110,6 +110,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = [
+    'users.backends.PhoneNumberBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
@@ -142,8 +146,20 @@ REST_FRAMEWORK = {
     ),
 }
 
-JWT_AUTH = { 
-    'JWT_AUTH_HEADER_PREFIX': 'JWT',
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=300),
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),
+    'JWT_ALLOW_REFRESH': True,
     'JWT_AUTH_HEADER_PREFIX': 'Bearer',
+    'JWT_ENCODE_HANDLER': 'rest_framework_jwt.utils.jwt_encode_handler',
+    'JWT_DECODE_HANDLER': 'rest_framework_jwt.utils.jwt_decode_handler',
+    'JWT_PAYLOAD_HANDLER': 'rest_framework_jwt.utils.jwt_payload_handler',
+    'JWT_PAYLOAD_GET_USER_ID_HANDLER': (
+        'rest_framework_jwt.utils.jwt_get_user_id_from_payload_handler'),
+    'JWT_RESPONSE_PAYLOAD_HANDLER': (
+        'rest_framework_jwt.utils.jwt_response_payload_handler'),
+    'JWT_ALGORITHM': 'HS256',
+    'JWT_VERIFY': True,
+    'JWT_VERIFY_EXPIRATION': True,
+    'JWT_LEEWAY': 0,
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=7),
 }

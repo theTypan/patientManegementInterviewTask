@@ -21,53 +21,34 @@ class UserManager(BaseUserManager):
 	"""
 	Custom user manager.
 	"""
-	def create_user(self, email, first_name, password=None):
+	def create_user(self, email, password=None, **extra_fields):
 		"""
-		Creates and saves a User with the given email, first name and password.
+		Creates and saves a User with the given email and password.
 		"""
 		if not email:
-			raise ValueError('Email is required for a user')
-
-		if not first_name:
-			raise ValueError('First name is required for a user')
-
-		if not password:
-			raise ValueError('Password is required for a user')
+			raise ValueError('Provide email for this user')
 
 		user = self.model(
-			email = self.normalize_email(email)
+			email=self.normalize_email(email),
 		)
 		user.set_password(password)
-		user.first_name = first_name
 		user.save(using=self._db)
 		return user
 
-	def create_patient(self, email, first_name, password):
-		""""
-		Creates and saves a patient user with the given email, first name
-		and password.
+	def create_staffuser(self, email, password, **extra_fields):
 		"""
-		user = self.create_user(email, first_name, password)
-		user.is_patient = True
-		user.save(using=self._db)
-		return user
-
-	def create_staff(self, email, first_name, password):
+		Creates and saves a staff user with the given email and password.
 		"""
-		Creates and saves a staff user with the given email, first name
-		and password.
-		"""
-		user = self.create_user(email, first_name, password)
+		user = self.create_user(email, password, **extra_fields)
 		user.is_staff = True
 		user.save(using=self._db)
 		return user
 
-	def create_superuser(self, email, first_name, password):
+	def create_superuser(self, email, password, **extra_fields):
 		"""
-		Creates and saves a superuser with the given email, first name
-		and password.
+		Creates and saves a superuser with the given email and password.
 		"""
-		user = self.create_user(email, first_name, password)
+		user = self.create_user(email, password, **extra_fields)
 		user.is_staff = True
 		user.is_superuser = True
 		user.save(using=self._db)
@@ -88,9 +69,9 @@ class User(AbstractBaseUser, PermissionsMixin, SoftDeletionModel):
 	first_name = models.CharField(max_length=255)
 	last_name = models.CharField(max_length=255, null=True, blank=True)
 	other_names = models.CharField(max_length=255, null=True, blank=True)
-	primary_phone_number = PhoneNumberField(unique=True)
+	primary_phone_number = PhoneNumberField(unique=True, null=True, blank=True, default=None)
 	alternative_phone_number = PhoneNumberField(blank=True, null=True)
-	email = models.EmailField(unique=True)
+	email = models.EmailField(unique=True, null=True, blank=True, default=None)
 	gender = models.CharField(max_length=1, choices=GENDER_CHOICES, blank=True, null=True)
 	date_of_birth = models.DateField(null=True, blank=True)
 	county = models.ForeignKey(County, on_delete=models.CASCADE, null=True, blank=True)
@@ -104,17 +85,13 @@ class User(AbstractBaseUser, PermissionsMixin, SoftDeletionModel):
 	date_joined = models.DateTimeField(default=timezone.now)
 
 	def __str__(self):
-		return self.email
+		return self.full_name
 
+	@property
 	def full_name(self):
-		"""
-		Returns a user's first name plus the last name if last name available or 
-		first name plus last name and other names if last name and other names
-		available seprated by spaces
-		"""
-		full_name = '%s %s %s' % (self.first_name, (self.last_name or ''), (self.other_names or ''))
-
-		return ' '.join(full_name.split())
+		return " ".join([
+			self.first_name, self.last_name or "", self.other_names or ""
+		])
 
 	def short_name(self):
 		"""
