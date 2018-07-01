@@ -15,8 +15,8 @@ class Department(AbstractBase):
 
 
 class Patient(AbstractBase):
-	user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='patients')
-	department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='departments')
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='patients')
 	enrollment_date = models.DateTimeField()
 	discharged = models.BooleanField(default=False)
 

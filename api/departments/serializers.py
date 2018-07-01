@@ -15,10 +15,13 @@ class PatientSerializer(serializers.ModelSerializer):
 		)
 
 class DepartmentSerializer(serializers.ModelSerializer):
+	patients = PatientSerializer(many=True, read_only=True)
+
 	class Meta:
 		model = Department
 		fields = (
 			'id',
 			'name',
+			'patients',
 		)
 
