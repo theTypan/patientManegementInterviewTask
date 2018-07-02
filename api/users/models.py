@@ -21,7 +21,7 @@ class UserManager(BaseUserManager):
 	"""
 	Custom user manager.
 	"""
-	def create_user(self, email, password=None, **extra_fields):
+	def create_user(self, email, first_name, password=None, **extra_fields):
 		"""
 		Creates and saves a User with the given email and password.
 		"""
@@ -31,24 +31,25 @@ class UserManager(BaseUserManager):
 		user = self.model(
 			email=self.normalize_email(email),
 		)
+		user.first_name = first_name
 		user.set_password(password)
 		user.save(using=self._db)
 		return user
 
-	def create_staffuser(self, email, password, **extra_fields):
+	def create_staffuser(self, email, first_name, password, **extra_fields):
 		"""
 		Creates and saves a staff user with the given email and password.
 		"""
-		user = self.create_user(email, password, **extra_fields)
+		user = self.create_user(email, first_name, password, **extra_fields)
 		user.is_staff = True
 		user.save(using=self._db)
 		return user
 
-	def create_superuser(self, email, password, **extra_fields):
+	def create_superuser(self, email, first_name, password, **extra_fields):
 		"""
 		Creates and saves a superuser with the given email and password.
 		"""
-		user = self.create_user(email, password, **extra_fields)
+		user = self.create_user(email, first_name, password, **extra_fields)
 		user.is_staff = True
 		user.is_superuser = True
 		user.save(using=self._db)
@@ -70,7 +71,7 @@ class User(AbstractBaseUser, PermissionsMixin, SoftDeletionModel):
 	last_name = models.CharField(max_length=255, null=True, blank=True)
 	other_names = models.CharField(max_length=255, null=True, blank=True)
 	primary_phone_number = PhoneNumberField(unique=True, null=True, blank=True, default=None)
-	alternative_phone_number = PhoneNumberField(blank=True, null=True)
+	alternative_phone_number = PhoneNumberField(unique=True, null=True, blank=True, default=None)
 	email = models.EmailField(unique=True, null=True, blank=True, default=None)
 	gender = models.CharField(max_length=1, choices=GENDER_CHOICES, blank=True, null=True)
 	date_of_birth = models.DateField(null=True, blank=True)
@@ -98,3 +99,14 @@ class User(AbstractBaseUser, PermissionsMixin, SoftDeletionModel):
 		Returns the first name of a user
 		"""
 		return self.first_name
+
+	# Quick fix to prevent empty string being saved for unique fields
+	def save(self, *args, **kwargs):
+
+		if not self.primary_phone_number:
+			self.primary_phone_number = None
+
+		if not self.alternative_phone_number:
+			self.alternative_phone_number = None
+
+		super(User, self).save(*args, **kwargs)
